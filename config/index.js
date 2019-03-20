@@ -10,12 +10,22 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    //一开始此处为空对象，为了跨域拿到后台的数据，才进行配置的
+    proxyTable: {           
+        '/api':{
+            target:'http://news-at.zhihu.com',
+            changeOrigin:true,
+            pathRewrite:{
+                '^/api':''
+            }
+        }
+    },
+
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
+    autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-

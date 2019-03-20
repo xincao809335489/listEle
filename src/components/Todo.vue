@@ -42,23 +42,31 @@
 		</div> -->
 
 		<!-- 插件轮播图 三-->
-		<div class="swiper-container" @mouseenter="mouseenter" @mouseleave="mouseleave">
+		<!-- <div class="swiper-container" @mouseenter="mouseenter" @mouseleave="mouseleave">
 		    <div class="swiper-wrapper">
 		        <div class="swiper-slide">Slide 1</div>
 		        <div class="swiper-slide">Slide 2</div>
 		        <div class="swiper-slide">Slide 3</div>
 		    </div>
-		</div>
-    <!-- 如果需要分页器 -->
-    <!-- <div class="swiper-pagination"></div> -->
-    
-    <!-- 如果需要导航按钮 -->
-    <!--<div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div> -->
-    
-    <!-- 如果需要滚动条 -->
-     <!-- <div class="swiper-scrollbar"></div>-->
-</div>
+		</div> -->
+	    <!-- 如果需要分页器 -->
+	    <!-- <div class="swiper-pagination"></div> -->
+	    
+	    <!-- 如果需要导航按钮 -->
+	    <!--<div class="swiper-button-prev"></div>
+	    <div class="swiper-button-next"></div> -->
+	    
+	    <!-- 如果需要滚动条 -->
+	     <!-- <div class="swiper-scrollbar"></div>-->
+	     <!-- 使用vuex实现一些效果 -->
+	     <p>{{increase}}</p>
+	     <p>{{my_func}}</p>
+	     <p>{{my_func_count}}</p>
+	     <button @click="showCount">click me</button>
+	     <hr>
+	     <br>
+	     <div id="next-tick" v-if="showDiv">验证next-tick的用法</div>
+	     <button @click="getterContent">获取内容</button>
 	</div>
 </template>
 
@@ -77,7 +85,8 @@
 					require("../assets/04.jpg")
 				],
                 bannerList:["http://p3.so.qhimgs1.com/t01f3c2fbbfc190da13.jpg","http://p1.so.qhimgs1.com/t01fb8af23fa1c93441.jpg","http://p0.so.qhimgs1.com/t013e7b12d08f155a4c.jpg"],
-                swiper:''
+                swiper:'',
+                showDiv:false
 			}
 		},
 		components:{
@@ -102,10 +111,30 @@
 			},
 			mouseleave(){
 				console.log("leave")
+			},
+			showCount(){
+				this.$store.commit("increment");
+			},
+			init(){
+				this.axios.get("/api/4/news/latest")
+		        .then(function(response){
+		          console.log(response.data);
+		        })
+		        .catch(function(err){ 
+		          console.log(err);
+		        })
+			},
+			getterContent(){
+				this.showDiv = true;
+				this.$nextTick(function(){
+					var txt =document.getElementById("next-tick").innerHTML;
+					 console.log(txt);
+				})
 			}
 		},
 		created (){
 			this.play();
+			this.init();
 		},
 		mounted(){
 			this.swiper = new Swiper(".swiper-container",{
@@ -115,6 +144,17 @@
 					delay:2000
 				}
 			})
+		},
+		computed:{
+			increase(){
+				return this.$store.state.count;
+			},
+			my_func(){
+				return this.$store.getters.my_func;
+			},
+			my_func_count(){
+				return this.$store.getters.my_func_count;
+			}
 		}
 	}
 </script>
